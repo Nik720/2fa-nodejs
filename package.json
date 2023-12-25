@@ -1,5 +1,5 @@
 {
-  "name": "2fa-with-google-authenticator",
+  "name": "2fa-nodejs",
   "version": "1.0.0",
   "description": "Implementation of Two Factor Authentication using Google Authenticator app in node js app",
   "main": "server.ts",
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Nik720/2fa-with-google-authenticator.git"
+    "url": "git+https://github.com/Nik720/2fa-nodejs.git"
   },
   "keywords": [
     "2fa",
@@ -22,15 +22,21 @@
   "author": "Nikunj Beladiya",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Nik720/2fa-with-google-authenticator/issues"
+    "url": "https://github.com/Nik720/2fa-nodejs.git/issues"
   },
-  "homepage": "https://github.com/Nik720/2fa-with-google-authenticator#readme",
+  "homepage": "https://github.com/Nik720/2fa-nodejs.git#readme",
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.18.2",
+    "mongodb": "^6.3.0",
     "ts-node": "^10.9.1",
     "typescript": "^5.1.6"
   },
   "devDependencies": {
-    "@types/express": "^4.17.18"
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.18",
+    "@types/morgan": "^1.9.9",
+    "@types/node": "^20.10.5",
+    "morgan": "^1.10.0"
   }
 }
