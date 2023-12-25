@@ -4,7 +4,7 @@
   "description": "Implementation of Two Factor Authentication using Google Authenticator app in node js app",
   "main": "server.ts",
   "scripts": {
-    "start": "ts-node --esm server.ts --watch"
+    "start": "ts-node --esm ./src/server.ts --watch"
   },
   "repository": {
     "type": "git",
