@@ -2,7 +2,7 @@ import cors from "cors";
 import express, { Request, Response } from "express";
 import morgan from "morgan";
 import authRouter from "./routes/auth.route";
-import { connectMongo } from "./configs/mongo";
+import { connectMongoose } from "./configs/mongo";
 
 const app = express();
 
@@ -36,7 +36,7 @@ app.listen(3000, async () => {
     console.log("Server is Successfully Running, and App is listening on port "+ 3000)
     
     // connect Mongodb
-    await connectMongo()
+    await connectMongoose()
 });
 
 
