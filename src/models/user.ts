@@ -11,12 +11,9 @@ export interface IUser {
     secrets2fa?: string;
 }
 
-interface IUserMethods {
-    isPasswordMatch(): Boolean
-}
-
-interface UserModel extends Model<IUser, {}, IUserMethods> {
-    isEmailUsed(email: string): Boolean
+interface UserModel extends Model<IUser, {}> {
+    isEmailUsed(email: string): Boolean;
+    isPasswordMatch(email: string, password: string): Boolean;
 }
 
 const userSchema = new Schema<IUser>(
@@ -65,9 +62,15 @@ const userSchema = new Schema<IUser>(
         timestamps: true
     }
 )
+// // Check if password matches the user's password 
+
+userSchema.static('isPasswordMatch', async function(email:string, password: string) {
+    const user: IUser = await this.findOne({email});
+    return bcrypt.compare(password, user.password)
+})
 
 // Check email is already in use or not
-userSchema.static('isEmailUsed', async function(email, excludeUserId) {
+userSchema.static('isEmailUsed', async function(email) {
     const user: IUser = await this.findOne({email});
     return !!user;
 });
@@ -80,14 +83,6 @@ userSchema.pre('save', async function(next) {
     }
     next();
 })
-
-// // Check if password matches the user's password 
-
-userSchema.method('isPasswordMatch', async function(password: string) {
-    const user: IUser = this;
-    return bcrypt.compare(password, user.password)
-})
-
 
 const User = model<IUser, UserModel>('User', userSchema);
 export default User;
