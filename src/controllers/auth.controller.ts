@@ -37,7 +37,14 @@ const LoginUser = async (req: Request, res: Response) => {
         }
         res.status(200).json({
             status: "success", 
-            data: user
+            data: {
+                user: {
+                    id: user._id,
+                    firstname: user.firstname,
+                    lastname: user.lastname,
+                    enabled2fa: user.enable2fa
+                }
+            }
         })
       } catch (error) {
         return res.status(500).json({
