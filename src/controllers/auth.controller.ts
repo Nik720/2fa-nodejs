@@ -59,9 +59,9 @@ const LoginUser = async (req: Request, res: Response) => {
 }
 
 const Enable2FA = async (req: Request, res: Response) => {
-    const { email } = req.body;
+    const { userId } = req.body;
 
-    if(!await User.findOne({email})) {
+    if(!await User.findOne({_id: userId})) {
         return res.status(404).json({
             status: "fail",
             message: "User does not exist"
@@ -71,7 +71,7 @@ const Enable2FA = async (req: Request, res: Response) => {
     const base32_secret: string = generateBase32Secret();
 
     // Store secret key in User object
-    await User.updateOne({email}, {secrets2fa: base32_secret});
+    await User.updateOne({_id: userId}, {secrets2fa: base32_secret});
 
     //Generate TOTP auth url
     let totp = new OTPAuth.TOTP({
@@ -104,9 +104,48 @@ const generateBase32Secret = () => {
     const buffer = crypto.randomBytes(15);
     return encode(buffer).replace(/=/g, "").substring(0, 24);
 }
+const Verify2fa = async (req: Request, res: Response) => {
+    const { userId, token } = req.body;
+    const user = await User.findOne({_id: userId});
+    if(!user) {
+        return res.status(404).json({
+            status: "fail",
+            message: "User does not exist"
+        })
+    }
+    // verify the token
+    const totp = new OTPAuth.TOTP({
+        issuer: "codeninjainsights.com",
+        label: "codeninjainsights",
+        algorithm: "SHA1",
+        digits: 6,
+        secret: user.secrets2fa!
+    });
+    const delta = totp.validate({token});
+
+    if(delta === null) {
+        return res.status(401).json({
+            status: "fail",
+            message: "Authentication failed"
+        })
+    }
+
+    // update the  user status
+    if(!user.enable2fa) {
+        await User.updateOne({_id: userId}, {enable2fa: true});
+    }
+
+    res.json({
+        status: "success",
+        data: {
+            otp_valid: true
+        }
+    })
+}
 
 export default {
     RegisterUser,
     LoginUser,
-    Enable2FA
+    Enable2FA,
+    Verify2fa
 }

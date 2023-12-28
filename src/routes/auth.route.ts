@@ -6,5 +6,6 @@ const router = express.Router();
 router.post('/register', authController.RegisterUser);
 router.post('/login', authController.LoginUser);
 router.post('/enable2fa', authController.Enable2FA);
+router.post('/verify2fa', authController.Verify2fa);
 
 export default router;
